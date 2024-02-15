@@ -34,3 +34,19 @@ class RegisterUserForm(UserCreationForm):
         if get_user_model().objects.filter(email=email).exists():
             raise ValidationError('Пользователь с таким E-mail уже существует')
         return email
+
+
+class UpdateProfileForm(forms.ModelForm):
+    class Meta:
+        model = get_user_model()
+        fields = ('username', 'email', 'profile_pic')
+
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            # 'profile_pic': forms.FileInput(attrs={'class': 'form-control'})
+        }
+
+        labels = {
+            'profile_pic': ''
+        }
