@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth import get_user_model
 from django.urls import reverse
 
 import cv2
@@ -140,3 +141,17 @@ class Genre(models.Model):
     def get_absolute_url(self):
         return reverse('anime:anime_by_genre', kwargs={'genre_url': self.slug})
     
+
+class Comments(models.Model):
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, verbose_name='Пользователь',
+                             related_name='comment_user')
+    anime = models.ForeignKey(Anime, on_delete=models.CASCADE, related_name='comment_anime')
+    comment_text = models.CharField(max_length=2000, verbose_name='Текст комментария')
+    date_create = models.DateField(auto_now_add=True, verbose_name='Дата создания')
+
+    def __str__(self):
+        return self.comment_text
+
+    class Meta:
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментарии'

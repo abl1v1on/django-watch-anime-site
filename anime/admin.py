@@ -51,3 +51,9 @@ class StatusAdmin(admin.ModelAdmin):
 class GenreAdmin(admin.ModelAdmin):
     list_display = ['genre_name', 'slug']
     list_display_links = ['genre_name', ]   
+
+
+@admin.register(models.Comments)
+class CommentsAdmin(admin.ModelAdmin):
+    list_display = ['user', 'anime', 'comment_text', 'date_create']
+    list_display_links = ['user', ]
