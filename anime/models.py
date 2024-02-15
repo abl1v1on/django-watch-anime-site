@@ -1,6 +1,9 @@
 from django.db import models
 from django.urls import reverse
 
+import cv2
+import random
+
 
 class Anime(models.Model):
     title = models.CharField(max_length=100, verbose_name='Название')
@@ -11,7 +14,8 @@ class Anime(models.Model):
     date_aired = models.DateField(verbose_name='Дата выхода')
     category = models.ForeignKey('Category', on_delete=models.CASCADE, verbose_name='Категория')
     genre = models.ManyToManyField('Genre', related_name='anime_genre', verbose_name='Жанр')
-    status = models.ForeignKey('Status', on_delete=models.CASCADE, verbose_name='Статус')
+    status = models.ForeignKey('Status', on_delete=models.CASCADE, 
+                               verbose_name='Статус', related_name='anime_status')
     duration = models.CharField(max_length=50, verbose_name='Продолжительность')
     quality = models.CharField(max_length=50, verbose_name='Качество')
     views = models.PositiveIntegerField(default=0, verbose_name='Просмотры')
@@ -33,12 +37,33 @@ class Anime(models.Model):
 
 class AnimeSeries(models.Model):
     anime_id = models.ForeignKey('Anime', related_name='anime_series', on_delete=models.CASCADE, verbose_name='Аниме')
-    series_file = models.FileField(upload_to='anime_series/%Y/%m', verbose_name='Серии', null=True, blank=True)
+    series_file = models.FileField(upload_to='anime_series/%Y/%m', verbose_name='Серии')
+    series_frame = models.ImageField(upload_to='anime_series/frames/%Y', verbose_name='Кадры', null=True, blank=True)
 
     class Meta:
         db_table = 'anime_series'
         verbose_name = 'Серия'
         verbose_name_plural = 'Серии'
+
+    # ДОДЕЛАТЬ!!!
+    # Сохраняем в series_frame рандомный кадр из видео
+    def save(self, *args, **kwargs):
+        if self.series_file:
+            # Открываем видео
+            video_capture = cv2.VideoCapture(self.series_file.path)
+            # Считываем кадры
+            total_frames = video_capture.get(cv2.CAP_PROP_FRAME_COUNT)
+            # Выбираем рандомный кадр
+            random_frame_number = random.randint(0, int(total_frames))
+            # Устанавливаем позицию видео на рандомном кадре
+            video_capture.set(cv2.CAP_PROP_POS_FRAMES, random_frame_number)
+            # Считываем кадр
+            ret, frame = video_capture.read()
+            # Сохраняем кадр как изобраение
+            self.series_frame = frame
+            # Закрываем видео
+            video_capture.release()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.series_file.url
@@ -94,6 +119,10 @@ class Status(models.Model):
 
     def __str__(self):
         return self.status_name
+    
+    def get_absolute_url(self):
+        return reverse('anime:anime_by_status', kwargs={'status_url': self.slug})
+    
 
 
 class Genre(models.Model):
@@ -107,3 +136,7 @@ class Genre(models.Model):
 
     def __str__(self):
         return self.genre_name
+    
+    def get_absolute_url(self):
+        return reverse('anime:anime_by_genre', kwargs={'genre_url': self.slug})
+    
