@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from .models import Anime, Genre, Status, Comments
 from .forms import CreateCommentForm
-from .utils import get_all_anime, create_comment
+from .utils import get_all_anime, create_comment, get_comments_by_anime_id
 
 
 def index(request):
@@ -48,17 +48,27 @@ def anime_detail(request, slug):
             'video': video,
             'episodes_count': episodes_count,
             'form': form,
-            'comments': Comments.objects.filter(anime_id=anime.id).order_by('-id')
+            'comments': get_comments_by_anime_id(anime.id).order_by('-id')
         }
     return render(request, 'anime/anime-details.html', context)
 
 
 def anime_by_genre(request, genre_url):
     genre = get_object_or_404(Genre, slug=genre_url)
+    anime = genre.anime_genre.all()
+
+    sort_by = request.GET.get('sort_by', None)
+
+    if sort_by:
+        if sort_by == 'date_aired':
+            anime = anime.order_by('-date_aired')
+        if sort_by == 'views':
+            anime = anime.order_by('-views')
+
 
     context = {
         'title': f'Аниме в жанре {genre.genre_name}',
-        'anime': genre.anime_genre.all()
+        'anime': anime
     }
     return render(request, 'categories.html', context)
 
