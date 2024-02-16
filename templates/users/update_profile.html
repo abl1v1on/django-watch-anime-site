@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+    <!-- Anime Section Begin -->
+    <form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <section class="anime-details spad">
+        <div class="container">
+            <div class="anime__details__content">
+                <div class="row">
+                    
+                    <div class="col-lg-3">
+                        <div class="anime__details__pic set-bg">
+                            {% if user.profile_pic %}
+                            <img style='border-radius: 10px' src='{{ user.profile_pic.url }}'>
+                            {% else %}
+                            <img style='border-radius: 10px' src='{% static "img/no_avatar.png" %}'>
+                            {% endif %}
+                            {{ form.profile_pic }}
+                        </div>
+                    </div>
+                    <div class="col-lg-9">
+                        <div class="anime__details__text">
+                            <div class="anime__details__title mb-3">
+                                <h3>Ник</h3>
+                                {{ form.username }}<br>
+                                <h3>Почта</h3>
+                                {{ form.email }}
+                            </div>
+                            <button class='btn btn-warning' type="submit">Редактировать</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    </form>
+        <!-- Anime Section End -->
+{% endblock %}

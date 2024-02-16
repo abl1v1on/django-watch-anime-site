@@ -62,6 +62,7 @@ def anime_by_genre(request, genre_url):
     if sort_by:
         if sort_by == 'date_aired':
             anime = anime.order_by('-date_aired')
+            return redirect('home')
         if sort_by == 'views':
             anime = anime.order_by('-views')
 
@@ -81,3 +82,13 @@ def anime_by_status(request, status_url):
         'anime': status.anime_status.all()
     }
     return render(request, 'categories.html', context)
+
+
+def delete_comment(request, comment_id):
+    comment = get_object_or_404(Comments, id=comment_id)
+
+    # Проверка на то, что пользователь может удалять только свои комментарии
+    if request.user.id == comment.user.id:
+        comment.delete()
+        return redirect('anime:anime_detail', slug=comment.anime.slug)
+    return redirect('anime:anime_detail', slug=comment.anime.slug)

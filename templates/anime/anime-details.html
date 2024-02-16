@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+    <!-- Anime Section Begin -->
+    <section class="anime-details spad">
+        <div class="container">
+            <div class="anime__details__content">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="anime__details__pic set-bg" data-setbg="{{ anime.cover.url }}">
+                            <div class="comment"><i class="fa fa-comments"></i> {{ anime.comment_anime.count }}</div>
+                            <div class="view"><i class="fa fa-eye"></i> {{ anime.views }}</div>
+                        </div>
+                    </div>
+                    <div class="col-lg-9">
+                        <div class="anime__details__text">
+                            <div class="anime__details__title">
+                                <h3>{{ anime.title }}</h3>
+                                <span>{{ anime.alt_title }}</span>
+                            </div>
+                            <p>{{ anime.description }}</p>
+                            <div class="anime__details__widget">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6">
+                                        <ul>
+                                            <li><span>Тип:</span> {{ anime.type }}</li>
+                                            <li><span>Студия:</span> {{ anime.studio }}</li>
+                                            <li><span>Дата выхода:</span> {{ anime.date_aired }}</li>
+                                            <li><span>Статус:</span> <a href='{{ anime.status.get_absolute_url }}'>{{ anime.status }}</a></li>
+                                            <li><span>Жанры:</span> {% for g in anime.genre.all %}{% if not forloop.last %}<a href='{{ g.get_absolute_url }}'>{{ g.genre_name }}</a>, {% else %}<a href='{{ g.get_absolute_url }}'> {{ g.genre_name }}</a>{% endif %}{% endfor %}</li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6">
+                                        <ul>
+                                            <li><span>Длительность:</span> {{ anime.duration }}</li>
+                                            <li><span>Качество:</span> {{ anime.quality }}</li>
+                                            <li><span>Просмотры:</span> {{ anime.views }}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="anime__details__btn">
+                                <a href="#" class="follow-btn"><i class="fa fa-heart-o"></i> В избранное</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="anime__video__player">
+                            <video id="player" playsinline controls data-poster="./videos/anime-watch.jpg">
+                                <source src="{{ video }}" type="video/mp4" />
+                                <!-- Captions are optional -->
+                                <track kind="captions" label="English captions" src="#" srclang="en" default />
+                            </video>
+                        </div>
+                        <div class="anime__details__episodes">
+                            <div class="section-title">
+                                <h5>Эпизоды</h5>
+                            </div>
+                            {% for i in episodes_count %}
+                            <a href="?episode={{ i }}">Ep {{ i }}</a>
+                            {% endfor %}
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-8 col-md-8">
+                        <div class="anime__details__review">
+                            <div class="section-title">
+                                <h5>Комментарии</h5>
+                            </div>
+                            {% for comment in comments %}
+                            <div class="anime__review__item">
+                                <div class="anime__review__item__pic">
+                                    {% if comment.user.profile_pic %}
+                                        <a href="{{ comment.user.get_absolute_url }}"><img src="{{ comment.user.profile_pic.url }}" alt=""></a>
+                                    {% else %}
+                                        <a href='{{ comment.user.get_absolute_url }}'><img src="{% static 'img/no_avatar.png' %}" alt=""></a>
+                                    {% endif %}
+                                </div>
+                                <div class="anime__review__item__text">
+                                    <h6>{{ comment.user.username }} - <span>{{ comment.date_create }}</span>{% if request.user.id == comment.user.id %}<a href="{% url 'anime:delete_comment' comment.pk %}"><span style="float: right;">Удалить комментарий</span></a>{% endif %}</h6>
+                                    <p>{{ comment.comment_text }}</p>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            
+                        </div>
+                        <div class="anime__details__form">
+                            <div class="section-title">
+                                <h5>Ваш комментарий</h5>
+                            </div>
+                            <form action="#" method='post'>
+                                {% csrf_token %}
+                                {{ form.as_p }}
+                                <button type="submit"><i class="fa fa-location-arrow"></i> Отправить</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4">
+                        <div class="anime__details__sidebar">
+                            <div class="section-title">
+                                <h5>you might like...</h5>
+                            </div>
+                            <div class="product__sidebar__view__item set-bg" data-setbg="img/sidebar/tv-1.jpg">
+                                <div class="ep">18 / ?</div>
+                                <div class="view"><i class="fa fa-eye"></i> 9141</div>
+                                <h5><a href="#">Boruto: Naruto next generations</a></h5>
+                            </div>
+                            <div class="product__sidebar__view__item set-bg" data-setbg="img/sidebar/tv-2.jpg">
+                                <div class="ep">18 / ?</div>
+                                <div class="view"><i class="fa fa-eye"></i> 9141</div>
+                                <h5><a href="#">The Seven Deadly Sins: Wrath of the Gods</a></h5>
+                            </div>
+                            <div class="product__sidebar__view__item set-bg" data-setbg="img/sidebar/tv-3.jpg">
+                                <div class="ep">18 / ?</div>
+                                <div class="view"><i class="fa fa-eye"></i> 9141</div>
+                                <h5><a href="#">Sword art online alicization war of underworld</a></h5>
+                            </div>
+                            <div class="product__sidebar__view__item set-bg" data-setbg="img/sidebar/tv-4.jpg">
+                                <div class="ep">18 / ?</div>
+                                <div class="view"><i class="fa fa-eye"></i> 9141</div>
+                                <h5><a href="#">Fate/stay night: Heaven's Feel I. presage flower</a></h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Anime Section End -->
+{% endblock %}
