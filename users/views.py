@@ -5,6 +5,7 @@ from django.contrib.auth.views import LoginView
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, DetailView, UpdateView
 from django.contrib.auth import get_user_model
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import LoginUserForm, RegisterUserForm, UpdateProfileForm
 
@@ -44,7 +45,7 @@ class UserProfile(DetailView):
         return context
 
 
-class UpdateProfile(UpdateView):
+class UpdateProfile(LoginRequiredMixin, UpdateView):
     model = get_user_model()
     template_name = 'users/update_profile.html'
     form_class = UpdateProfileForm

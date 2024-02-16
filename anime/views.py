@@ -2,10 +2,11 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from .models import Anime, Genre, Status, Comments
 from .forms import CreateCommentForm
+from .utils import get_all_anime, create_comment
 
 
 def index(request):
-    anime_list = Anime.objects.all()
+    anime_list = get_all_anime().order_by('-id')
 
     context = {
         'title': 'Главаня страница',
@@ -25,16 +26,16 @@ def anime_detail(request, slug):
         form = CreateCommentForm(request.POST)
         if form.is_valid():
             cd = form.cleaned_data
-            Comments.objects.create(
-                user_id = request.user.id,
-                anime_id = anime.id,
-                comment_text = cd['comment_text']
-            )
+            create_comment(request.user.id, anime.id, cd['comment_text'])
             return redirect('anime:anime_detail', slug=slug)
     else:
-        form = CreateCommentForm
+        form = CreateCommentForm()
+
         if not current_episode:
-            video = anime.anime_series.all()[0]
+            try:
+                video = anime.anime_series.all()[0]
+            except IndexError:
+                video = ''
         else:
             if int(current_episode) <= len(episodes_count):
                 video = anime.anime_series.all()[int(current_episode) - 1]
@@ -57,7 +58,6 @@ def anime_by_genre(request, genre_url):
 
     context = {
         'title': f'Аниме в жанре {genre.genre_name}',
-        # 'genre': genre,
         'anime': genre.anime_genre.all()
     }
     return render(request, 'categories.html', context)
