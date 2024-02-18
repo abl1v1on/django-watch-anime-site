@@ -12,6 +12,9 @@ def create_comment(user_id, anime_id, text):
         comment_text = text
     )
 
+def get_all_comments():
+    return Comments.objects.all()
+
 
 def get_comments_by_anime_id(anime_id):
     return Comments.objects.filter(anime_id=anime_id)

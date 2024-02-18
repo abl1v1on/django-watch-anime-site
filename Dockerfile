@@ -2,9 +2,13 @@ FROM python:3
 
 ENV PYTHONUNBUFFERED 1
 
-RUN mkdir /app
+COPY requirements.txt /temp/requirements.txt
+
+COPY . /app
+
 WORKDIR /app
 
-COPY . /app/
+# Открываем порт
+EXPOSE 8000
 
-RUN pip install -r requirements.txt
+RUN pip install --upgrade pip && pip install -r /temp/requirements.txt.

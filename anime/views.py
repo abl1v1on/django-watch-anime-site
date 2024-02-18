@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from .models import Anime, Genre, Status, Comments
 from .forms import CreateCommentForm
-from .utils import get_all_anime, create_comment, get_comments_by_anime_id
+from .utils import get_all_anime, create_comment, get_comments_by_anime_id, get_all_comments
 
 
 def index(request):
@@ -10,7 +10,8 @@ def index(request):
 
     context = {
         'title': 'Главаня страница',
-        'anime': anime_list
+        'anime': anime_list,
+        'new_comments': get_all_comments().order_by('-id')[:6]
     }
     return render(request, 'index.html', context)
 
