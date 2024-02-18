@@ -10,6 +10,8 @@ urlpatterns = [
     path('', index, name='home'),
     path('anime/', include('anime.urls', namespace='anime')),
     path('user/', include('users.urls', namespace='user')),
+    path('blog/', include('blog.urls', namespace='blog')),
+    path('ckeditor5/', include('django_ckeditor_5.urls')),
 ]
 
 
