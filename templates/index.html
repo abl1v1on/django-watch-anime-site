@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% load static %}
+{% load tags %}
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -450,6 +451,7 @@
         <div class="section-title">
             <h5>Новые комментарии</h5>
         </div>
+        {% tag_new_comments as new_comments %}
         {% for comment in new_comments %}
         <div class="product__sidebar__comment__item">
             <div class="product__sidebar__comment__item__pic">

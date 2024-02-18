@@ -11,7 +11,7 @@ def index(request):
     context = {
         'title': 'Главаня страница',
         'anime': anime_list,
-        'new_comments': get_all_comments().order_by('-id')[:6],
+        # 'new_comments': get_all_comments().order_by('-id')[:6],
         'filters': {
             'top_views': get_all_anime().order_by('-views')[:4],
             'date_aired': get_all_anime().order_by('date_aired')[:4]
