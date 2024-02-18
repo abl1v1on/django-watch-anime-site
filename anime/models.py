@@ -17,6 +17,7 @@ class Anime(models.Model):
     genre = models.ManyToManyField('Genre', related_name='anime_genre', verbose_name='Жанр')
     status = models.ForeignKey('Status', on_delete=models.CASCADE, 
                                verbose_name='Статус', related_name='anime_status')
+    episodes_quantity = models.PositiveIntegerField(verbose_name='Количество эпизодов')
     duration = models.CharField(max_length=50, verbose_name='Продолжительность')
     quality = models.CharField(max_length=50, verbose_name='Качество')
     views = models.PositiveIntegerField(default=0, verbose_name='Просмотры')

@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from .models import Anime, Genre, Status, Comments
 from .forms import CreateCommentForm
-from .utils import get_all_anime, create_comment, get_comments_by_anime_id, get_all_comments
+from .utils import get_all_anime, create_comment, get_comments_by_anime_id, get_recomendation_anime
 
 
 def index(request):
@@ -11,10 +11,9 @@ def index(request):
     context = {
         'title': 'Главаня страница',
         'anime': anime_list,
-        # 'new_comments': get_all_comments().order_by('-id')[:6],
         'filters': {
-            'top_views': get_all_anime().order_by('-views')[:4],
-            'date_aired': get_all_anime().order_by('date_aired')[:4]
+            'top_views': get_all_anime().order_by('-views')[:3],
+            'date_aired': get_all_anime().order_by('date_aired')[:3]
         }
     }
     return render(request, 'index.html', context)
@@ -53,7 +52,8 @@ def anime_detail(request, slug):
             'video': video,
             'episodes_count': episodes_count,
             'form': form,
-            'comments': get_comments_by_anime_id(anime.id).order_by('-id')
+            'comments': get_comments_by_anime_id(anime.id).order_by('-id'),
+            'recomendations': get_recomendation_anime(anime)
         }
     return render(request, 'anime/anime-details.html', context)
 
@@ -66,7 +66,7 @@ def anime_by_genre(request, genre_url):
 
     if sort_by:
         if sort_by == 'date_aired':
-            anime = anime.order_by('date_aired')
+            anime = anime.order_by('-id')
         if sort_by == 'views':
             anime = anime.order_by('-views')
 

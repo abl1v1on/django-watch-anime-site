@@ -69,7 +69,7 @@
                             <div class="col-lg-4 col-md-6 col-sm-6">
                                 <div class="product__item">
                                     <div class="product__item__pic set-bg" data-setbg="{{ a.cover.url }}">
-                                        <div class="ep">{{ a.anime_series.count }} / 18</div>
+                                        <div class="ep">{{ a.anime_series.count }} / {{ a.episodes_quantity }}</div>
                                         <div class="comment"><i class="fa fa-comments"></i> {{ a.comment_anime.count }}</div>
                                         <div class="view"><i class="fa fa-eye"></i> {{ a.views }}</div>
                                     </div>
@@ -437,7 +437,7 @@
                             <div class="filter__gallery">
                                 <div class="product__sidebar__view__item set-bg mix views img-fuild"
                                 data-setbg="{{ anime.cover.url }}">
-                                <div class="ep">{{ anime.anime_series.count }} / 18</div>
+                                <div class="ep">{{ anime.anime_series.count }} / {{ anime.episodes_quantity }}</div>
                                 <div class="view"><i class="fa fa-eye"></i> {{ anime.views }}</div>
                                 <h5><a href="#">{{ anime.title }}</a></h5>
                             </div>
