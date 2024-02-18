@@ -11,7 +11,11 @@ def index(request):
     context = {
         'title': 'Главаня страница',
         'anime': anime_list,
-        'new_comments': get_all_comments().order_by('-id')[:6]
+        'new_comments': get_all_comments().order_by('-id')[:6],
+        'filters': {
+            'top_views': get_all_anime().order_by('-views')[:4],
+            'date_aired': get_all_anime().order_by('date_aired')[:4]
+        }
     }
     return render(request, 'index.html', context)
 
@@ -62,15 +66,14 @@ def anime_by_genre(request, genre_url):
 
     if sort_by:
         if sort_by == 'date_aired':
-            anime = anime.order_by('-date_aired')
-            return redirect('home')
+            anime = anime.order_by('date_aired')
         if sort_by == 'views':
             anime = anime.order_by('-views')
 
-
     context = {
         'title': f'Аниме в жанре {genre.genre_name}',
-        'anime': anime
+        'anime': anime,
+        'sort_by': sort_by
     }
     return render(request, 'categories.html', context)
 

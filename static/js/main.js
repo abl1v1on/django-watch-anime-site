@@ -31,6 +31,10 @@
         }
     });
 
+    $('.select').change(function(){
+        window.location.href = $(this).val();
+    });
+
     /*------------------
         Background Set
     --------------------*/
